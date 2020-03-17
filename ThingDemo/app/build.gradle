@@ -1,0 +1,74 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+    defaultConfig {
+        applicationId "com.gears42.thingdemo"
+        minSdkVersion 24
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'project.properties'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.8.3'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.8.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.8.3'
+
+    implementation files('libs/log4j-1.2.12.jar')
+    implementation files('libs/commons-beanutils-1.9.2.jar')
+    implementation files('libs/commons-cli-1.0.jar')
+    implementation files('libs/commons-codec-1.13.jar')
+    implementation files('libs/commons-collections-3.2.2.jar')
+    implementation files('libs/commons-digester-1.8.1.jar')
+    implementation files('libs/commons-lang3-3.6.jar')
+    implementation files('libs/commons-logging-1.2.jar')
+    implementation files('libs/commons-validator-1.6.jar')
+    implementation files('libs/jcip-annotations-1.0.jar')
+    implementation files('libs/jjwt-api-0.10.5.jar')
+    implementation files('libs/jjwt-impl-0.10.5.jar')
+    implementation files('libs/jjwt-jackson-0.10.5.jar')
+    implementation files('libs/jjwt-orgjson-0.10.5.jar')
+    implementation files('libs/jmdns-3.5.3.jar')
+    implementation files('libs/joda-time-2.9.4.jar')
+    implementation files('libs/json-20180130.jar')
+    implementation files('libs/jsr250-api-1.0.jar')
+    implementation files('libs/junit-3.8.2.jar')
+    implementation 'org.dizitart:nitrite:1.0'
+    implementation files('libs/ZSDK_ANDROID_API.jar')
+    implementation files('libs/thingsframework.jar')
+}
