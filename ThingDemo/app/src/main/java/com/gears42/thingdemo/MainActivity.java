@@ -15,8 +15,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.apache.log4j.Level;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
