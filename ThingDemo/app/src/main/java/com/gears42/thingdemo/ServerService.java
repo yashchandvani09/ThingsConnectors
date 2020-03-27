@@ -19,16 +19,9 @@ import com.gears42.iot.webthing.CredentialsIx;
 import com.gears42.iot.webthing.ServerManager;
 import com.gears42.iot.webthing.Thing;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.chainsaw.Main;
-
-
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
-
-import androidx.annotation.Nullable;
 
 public class ServerService extends Service {
 
@@ -94,7 +87,6 @@ public class ServerService extends Service {
             //get ip address of device and add it to a utility
             WifiManager wm = (WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE);
             Utility.DEVICE_IP = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
-            Log.d("hello",""+Utility.DEVICE_IP);
             rootPath= Environment.getExternalStorageDirectory().toString();
 
         }catch(Exception e){
@@ -121,10 +113,10 @@ public class ServerService extends Service {
         properties.put("bulb-brightness","50");
 
         //create a bulb thing
-        BulbThing bulbThing=new BulbThing("SmartBulb", "Manage Smart Bulb","device-uniqueid", properties);
+        BulbThing bulbThing=new BulbThing("SmartBulb", "Manage Smart Bulb","DEVICEID-12345", properties);
 
         //make sure device-uniqueid should be same in thing class constructor and in list of thing
-        listOfThings.put("device-uniqueid",bulbThing);
+        listOfThings.put("DEVICEID-12345",bulbThing);
 
     }
 
@@ -142,7 +134,7 @@ public class ServerService extends Service {
 
                         //server will start with list of things at specified port, device-ip is used to access server from different devices, rootpath is path where server's file is created, broadcast receiver class is used for restarting server in android
                         ServerManager serverManager = new ServerManager();
-                        serverManager.startServer(listOfThings, "List of Things", Utility.PORT, Utility.DEVICE_IP, credentialsIx, rootPath, false,"com.gears42.zebraprinterconnector.RestartAppIntentReceiver");
+                        serverManager.startServer(listOfThings, "List of Things", Utility.PORT, Utility.DEVICE_IP, credentialsIx, rootPath, false,"com.gears42.thingdemo.RestartAppIntentReceiver");
                         isServerStarted=true;
                     }else{
                         Log.d("thing","No list of thing to host");
