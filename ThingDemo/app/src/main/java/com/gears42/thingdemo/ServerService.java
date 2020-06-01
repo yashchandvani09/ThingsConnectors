@@ -3,10 +3,7 @@ package com.gears42.thingdemo;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.hardware.usb.UsbManager;
-import android.net.Credentials;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -15,20 +12,19 @@ import android.os.IBinder;
 import android.text.format.Formatter;
 import android.util.Log;
 
-import com.gears42.iot.webthing.CredentialsIx;
 import com.gears42.iot.webthing.ServerManager;
 import com.gears42.iot.webthing.Thing;
 
-import java.util.Dictionary;
+
 import java.util.HashMap;
-import java.util.Hashtable;
 
 public class ServerService extends Service {
 
-    boolean isServerStarted = false;
-    public CredentialsIx credentialsIx;
     static HashMap<String, Thing> listOfThings = new HashMap<>();
+    String DEVICE_IP = "";
+    int PORT = 8889;
     String rootPath;
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -66,57 +62,39 @@ public class ServerService extends Service {
             }
 
             //check if server is already started or not
-            if (!isServerStarted) {
+            if (!ServerManager.isServerRunnning()) {
 
                 getIPAddresOfDevice();
-                initializeCredentials();
                 startServer();
 
             }
 
             startForeground(101, notification);
-        }catch (Exception e){
-            Log.d("thing",e.getLocalizedMessage());
+        } catch (Exception e) {
+            Log.d("thing", e.getLocalizedMessage());
         }
         return START_STICKY;
     }
 
-    public void getIPAddresOfDevice(){
-        try{
+    public void getIPAddresOfDevice() {
+        try {
 
-            //get ip address of device and add it to a utility
-            WifiManager wm = (WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE);
-            Utility.DEVICE_IP = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
-            rootPath= Environment.getExternalStorageDirectory().toString();
+            //get ip address of device
+            WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+            DEVICE_IP = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+            rootPath = Environment.getExternalStorageDirectory().toString();
 
-        }catch(Exception e){
-            Log.d("thing",e.getLocalizedMessage());
+        } catch (Exception e) {
+            Log.d("thing", e.getLocalizedMessage());
         }
 
     }
 
-    public void initializeCredentials(){
+    public void createThing() {
 
-            //credential class to initialize email and password which is used for login
-            credentialsIx=new Credential();
-            credentialsIx.setEmail(Utility.EMAIL);
-            credentialsIx.setPassword(Utility.PASSWORD);
-            credentialsIx.setKey(Utility.KEY);
-
-    }
-
-    public void createThing(){
-
-        //create a list of properties with value
-        Dictionary<String, String> properties=new Hashtable<String, String>();
-        properties.put("bulb-switch","false");
-        properties.put("bulb-brightness","50");
-
-        //create a bulb thing
-        BulbThing bulbThing=new BulbThing("SmartBulb", "Manage Smart Bulb","DEVICEID-12345", properties);
-
-        //make sure device-uniqueid should be same in thing class constructor and in list of thing
-        listOfThings.put("DEVICEID-12345",bulbThing);
+        //create a thing and add it to listOfThings hashmap.
+        BulbThing bulbThing=new BulbThing("BulbThing","Smart Bulb of Office","4242AB42422");
+        listOfThings.put("4242AB42422",bulbThing);
 
     }
 
@@ -130,19 +108,22 @@ public class ServerService extends Service {
                     createThing();
 
                     //make sure list contains things
-                    if(listOfThings.size()!=0 && !ServerManager.isServerRunnning())  {
+                    if (listOfThings.size() != 0 && !ServerManager.isServerRunnning()) {
 
-                        //server will start with list of things at specified port, device-ip is used to access server from different devices, rootpath is path where server's file is created, broadcast receiver class is used for restarting server in android
+                        //server will start with list of things at specified port, device-ip is used to access server from different devices, rootpath is path where server's file is created, Whether https is true or false. false will start server on http, broadcast receiver class is used for restarting server in android
                         ServerManager serverManager = new ServerManager();
-                        serverManager.startServer(listOfThings, "List of Things", Utility.PORT, Utility.DEVICE_IP, credentialsIx, rootPath, false,"com.gears42.thingdemo.RestartAppIntentReceiver");
-                        isServerStarted=true;
-                    }else{
-                        Log.d("thing","No list of thing to host");
-                        isServerStarted=false;
+
+                        //if you want to change default credentials,
+                        ServerManager.setEmail("say-hello@thing.com");
+                        ServerManager.setPassword("42gears");
+
+                        serverManager.startServer(listOfThings, "Smart Bulbs", PORT, DEVICE_IP, rootPath, false, "com.gears42.thingdemo.RestartAppIntentReceiver");
+                    } else {
+                        Log.d("thing", "No list of thing to host");
                     }
 
-                }catch(Exception e){
-                    Log.d("thing",e.getLocalizedMessage());
+                } catch (Exception e) {
+                    Log.d("thing", e.getLocalizedMessage());
                 }
             }
         });
