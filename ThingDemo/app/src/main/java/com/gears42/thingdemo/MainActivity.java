@@ -1,5 +1,6 @@
 package com.gears42.thingdemo;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -25,15 +26,17 @@ public class MainActivity extends AppCompatActivity {
     public static final String CHANNEL_NAME = "thing Server";
 
     private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
-    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] {
-            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE };
+    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[]{
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         checkPermissions();
     }
+
 
     protected void checkPermissions() {
 
@@ -58,11 +61,12 @@ public class MainActivity extends AppCompatActivity {
 
             final int[] grantResults = new int[REQUIRED_SDK_PERMISSIONS.length];
             Arrays.fill(grantResults, PackageManager.PERMISSION_GRANTED);
-            onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, REQUIRED_SDK_PERMISSIONS,grantResults);
+            onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, REQUIRED_SDK_PERMISSIONS, grantResults);
 
         }
 
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
@@ -75,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
 
                         // exit the app if one permission is not granted
-                        Toast.makeText(this, "Required permission '" + permissions[index]+ "' not granted, exiting", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Required permission '" + permissions[index] + "' not granted, exiting", Toast.LENGTH_LONG).show();
                         finish();
                         return;
 
@@ -88,21 +92,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void startService(){
+
+    public void startService() {
 
         try {
-            Intent serverServiceIntent = new Intent(getApplicationContext(),ServerService.class);
+            Intent serverServiceIntent = new Intent(getApplicationContext(), ServerService.class);
             createNotificationChannel();
             startService(serverServiceIntent);
 
         } catch (Exception e) {
-            Log.d("thing",""+e.getMessage());
+            Log.d("thing", "" + e.getMessage());
         }
     }
 
+
     private void createNotificationChannel() {
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH
             );
@@ -111,4 +117,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+
 }
