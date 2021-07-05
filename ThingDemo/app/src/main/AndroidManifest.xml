@@ -8,12 +8,21 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <!-- Required permissions for SureMDM Agent -->
+    <uses-permission android:name="com.nix.ThingsContentProvider_READ_PERMISSION"/>
+    <uses-permission android:name="com.nix.ThingsContentProvider_WRITE_PERMISSION"/>
+
+    <!-- Required permissions for Testing app -->
+    <uses-permission android:name="com.gears42.thingstester.ThingsContentProvider_READ_PERMISSION"/>
+    <uses-permission android:name="com.gears42.thingstester.ThingsContentProvider_WRITE_PERMISSION"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
 
         <service

@@ -16,17 +16,18 @@ public class FadeAction extends Action {
     @Override
     public ActionResponse performAction(ActionResponse actionResponse) {
 
-        //here we can access different properties of action class
         Thing thing = this.getThing();
         JsonObject input = this.getInput();
 
+        //TODO
+        //perform fade action
 
         //if action is failed then change status
-        //actionResponse.setReason("Your reason");
-        //actionResponse.setStatus("Failed");
+        //actionResponse.setReason("reason for failure");
+        //actionResponse.setStatus(ActionResponse.ACTION_STATUS.FAILED);
 
 
-        actionResponse.setStatus("completed");
+        actionResponse.setStatus(ActionResponse.ACTION_STATUS.COMPLETED);
         return actionResponse;
     }
 
