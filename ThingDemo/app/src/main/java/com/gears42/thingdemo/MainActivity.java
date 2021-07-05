@@ -2,20 +2,18 @@ package com.gears42.thingdemo;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,8 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String CHANNEL_ID = "com.gears42.thing.test";
     public static final String CHANNEL_NAME = "thing Server";
-
-    private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
+    public static Context context;
+    public final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
     private static final String[] REQUIRED_SDK_PERMISSIONS = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -33,11 +31,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        context =getApplicationContext();
         checkPermissions();
     }
 
-
+    //for checking required permissions
     protected void checkPermissions() {
 
         final List<String> missingPermissions = new ArrayList<String>();
@@ -62,15 +60,13 @@ public class MainActivity extends AppCompatActivity {
             final int[] grantResults = new int[REQUIRED_SDK_PERMISSIONS.length];
             Arrays.fill(grantResults, PackageManager.PERMISSION_GRANTED);
             onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, REQUIRED_SDK_PERMISSIONS, grantResults);
-
         }
-
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_CODE_ASK_PERMISSIONS:
 
@@ -78,21 +74,20 @@ public class MainActivity extends AppCompatActivity {
 
                     if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
 
-                        // exit the app if one permission is not granted
+                        // exit the app if any permission is not granted
                         Toast.makeText(this, "Required permission '" + permissions[index] + "' not granted, exiting", Toast.LENGTH_LONG).show();
                         finish();
                         return;
-
                     }
                 }
 
-                // all permissions were granted
+                // all permissions are granted
                 startService();
                 break;
         }
     }
 
-
+    //for starting ServerService
     public void startService() {
 
         try {
@@ -105,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    //for creating notification
     private void createNotificationChannel() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -115,8 +110,5 @@ public class MainActivity extends AppCompatActivity {
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(serviceChannel);
         }
-
     }
-
-
 }
